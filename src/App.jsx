@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import Header from './components/Header.jsx';
+import Product from './components/Product.jsx';
 import Shop from './components/Shop.jsx';
 import { DUMMY_PRODUCTS } from './dummy-products.js';
 
@@ -10,12 +11,10 @@ function App() {
   });
 
   function handleAddItemToCart(id) {
-    setShoppingCart((prevShoppingCart) => {
+    setShoppingCart(prevShoppingCart => {
       const updatedItems = [...prevShoppingCart.items];
 
-      const existingCartItemIndex = updatedItems.findIndex(
-        (cartItem) => cartItem.id === id
-      );
+      const existingCartItemIndex = updatedItems.findIndex(cartItem => cartItem.id === id);
       const existingCartItem = updatedItems[existingCartItemIndex];
 
       if (existingCartItem) {
@@ -25,7 +24,7 @@ function App() {
         };
         updatedItems[existingCartItemIndex] = updatedItem;
       } else {
-        const product = DUMMY_PRODUCTS.find((product) => product.id === id);
+        const product = DUMMY_PRODUCTS.find(product => product.id === id);
         updatedItems.push({
           id: id,
           name: product.title,
@@ -41,11 +40,9 @@ function App() {
   }
 
   function handleUpdateCartItemQuantity(productId, amount) {
-    setShoppingCart((prevShoppingCart) => {
+    setShoppingCart(prevShoppingCart => {
       const updatedItems = [...prevShoppingCart.items];
-      const updatedItemIndex = updatedItems.findIndex(
-        (item) => item.id === productId
-      );
+      const updatedItemIndex = updatedItems.findIndex(item => item.id === productId);
 
       const updatedItem = {
         ...updatedItems[updatedItemIndex],
@@ -71,7 +68,16 @@ function App() {
         cart={shoppingCart}
         onUpdateCartItemQuantity={handleUpdateCartItemQuantity}
       />
-      <Shop onAddItemToCart={handleAddItemToCart} />
+      <Shop>
+        {DUMMY_PRODUCTS.map(product => (
+          <li key={product.id}>
+            <Product
+              {...product}
+              onAddToCart={handleAddItemToCart}
+            />
+          </li>
+        ))}
+      </Shop>
     </>
   );
 }
